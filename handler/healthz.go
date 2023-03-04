@@ -37,6 +37,7 @@ func (h *HealthzHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// 	log.Printf(err)
 	// 	return
 	// }
+	// main関数と handlerの定義は別にした方がよさそう
 	http.HandleFunc("/healthz", handler)
 	w.WriteHeader(http.StatusOK)
 	w.Write(m)
