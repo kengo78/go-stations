@@ -17,9 +17,10 @@ type HealthzHandler struct{}
 
 // NewHealthzHandler returns HealthzHandler based http.Handler.
 func NewHealthzHandler() *HealthzHandler {
-	return &HealthzHandler{
-		message :"OK"
-	}
+	// return &HealthzHandler{
+	// 	message :"OK"
+	// }
+	return &HealthzHandler{}
 }
 
 // ServeHTTP implements http.Handler interface.
@@ -30,15 +31,19 @@ func (h *HealthzHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	m := &model.HealthzResponse{
 		Message: "OK",
 	}
-	err := json.NewEncoder(w)
-	log.Printf(err)
-	// if err != nil {
-	// 	// http.Error(w, err.Error(), 500)
-	// 	log.Printf(err)
-	// 	return
+	encoder := json.NewEncoder(w)
+	if err := encoder.Encode(m); err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	// m := &model.HealthzResponse{
+	// 	Message: "OK",
 	// }
-	// main関数と handlerの定義は別にした方がよさそう
-	http.HandleFunc("/healthz", handler)
-	w.WriteHeader(http.StatusOK)
-	w.Write(m)
+	// err := json.NewEncoder(w)
+	// log.Printf(err)
+
+	// http.HandleFunc("/healthz", handler)
+	// w.WriteHeader(http.StatusOK)
+	// w.Write(m)
 }
